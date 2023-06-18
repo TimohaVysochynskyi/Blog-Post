@@ -1,7 +1,7 @@
-function leaveComment() { 
-    $("#leave-comment").slideDown("fast");
-    $("#leave-comment").css("display", "flex");
+function showPasswordChange() {
+  $("#change-password").slideDown("fast");
+  $("#change-password").css("display", "flex");
 }
-function closeComment(){ 
-    $("#leave-comment").slideUp("fast");
+function closePasswordChange() {
+  $("#change-password").slideUp("fast");
 }

@@ -1,3 +1,14 @@
+<?php
+    require '../backend/connect.php';
+    $cookieEmail = $_COOKIE['email'];
+    $postData = $conn->query("SELECT * FROM `post`");
+    $myPosts = $conn->query("SELECT `comments` FROM `post` WHERE `author` = '$cookieEmail'");
+
+    if(empty($_COOKIE['email']) && empty($_COOKIE['name'])){
+        header("Location: ../");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,23 +29,23 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="./dashboard.html" class="nav-link active" aria-current="page">
+                <a href="./dashboard" class="nav-link active" aria-current="page">
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="./new-post.html" class="nav-link link-body-emphasis">
+                <a href="./new-post" class="nav-link link-body-emphasis">
                     New Post
                 </a>
             </li>
             <li>
-                <a href="./profile.html" class="nav-link link-body-emphasis">
+                <a href="./profile" class="nav-link link-body-emphasis">
                     Profile
                 </a>
             </li>
             <hr>
             <li>
-                <a href="#" class="nav-link link-body-emphasis">
+                <a href="../backend/sign-out.php" class="nav-link link-body-emphasis">
                     Log out
                 </a>
             </li>
@@ -48,19 +59,25 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Author</th>
+                        <th scope="col">Message</th>
                         <th scope="col">Comments</th>
                         <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Test</td>
-                        <td>fighter2000</td>
-                        <td>2</td>
-                        <td>18-06-2023</td>
-                    </tr>
+                    <?php 
+                    foreach($postData as $post){
+                        echo '
+                            <tr>
+                                <td>'.$post['id'].'</td>
+                                <td>'.$post['title'].'</td>
+                                <td>'.$post['message'].'</td>
+                                <td>'.$post['comments_num'].'</td>
+                                <td>'.$post['date'].'</td>
+                            </tr>
+                        ';
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -72,17 +89,30 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Author</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Message</th>
                         <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>boxer1500</td>
-                        <td>boxer@gmail.com</td>
-                        <td>18-06-2023</td>
-                    </tr>
+                    <?php
+                    foreach($myPosts as $onlyPost){
+                        $commentsArr = explode(" | ", $onlyPost['comments']);
+                        foreach($commentsArr as $i){
+                            $id = $commentsArr[$i];
+                            $commentData = $conn->query("SELECT * FROM `comment` WHERE `id` = '$id'");
+                            foreach($commentData as $row){
+                                echo '
+                                    <tr>
+                                        <td>'.$row['id'].'</td>
+                                        <td>'.$row['name'].'</td>
+                                        <td>'.$row['message'].'</td>
+                                        <td>'.$row['date'].'</td>
+                                    </tr>
+                                ';
+                            }
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>

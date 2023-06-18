@@ -1,3 +1,8 @@
+<?php
+    require './backend/connect.php';
+    $postData = $conn->query("SELECT * FROM `post`");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,11 +21,11 @@
     
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="#" class="nav-link px-2 link-secondary">Main</a></li>
-                    <? if(!empty($_COOKIE['email']) && !empty($_COOKIE['name'])): ?>
-                    <li><a href="./user/dashboard.html" class="nav-link px-2 link-body-emphasis">Dashboard</a></li>
-                    <li><a href="./user/new-post.html" class="nav-link px-2 link-body-emphasis">New post</a></li>
-                    <li><a href="./user/profile.html" class="nav-link px-2 link-body-emphasis">Profile</a></li>
-                    <? endif; ?>
+                    <?php if(!empty($_COOKIE['email']) && !empty($_COOKIE['name'])): ?>
+                    <li><a href="./user/dashboard" class="nav-link px-2 link-body-emphasis">Dashboard</a></li>
+                    <li><a href="./user/new-post" class="nav-link px-2 link-body-emphasis">New post</a></li>
+                    <li><a href="./user/profile" class="nav-link px-2 link-body-emphasis">Profile</a></li>
+                    <?php endif; ?>
                 </ul>
 
                 <?php if(!empty($_COOKIE['email']) && !empty($_COOKIE['name'])): ?>
@@ -30,9 +35,9 @@
                         <img src="./images/user.png" alt="mdo" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small">
-                        <li><a class="dropdown-item" href="./user/dashboard.html">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="./user/new-post.html">New post</a></li>
-                        <li><a class="dropdown-item" href="./user/profile.html">Profile</a></li>
+                        <li><a class="dropdown-item" href="./user/dashboard">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="./user/new-post">New post</a></li>
+                        <li><a class="dropdown-item" href="./user/profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -41,8 +46,8 @@
                 </div>
                 <?php else: ?>
                 <div class="col-md-3 text-end">
-                    <a href="./auth/sign-in.html" class="btn btn-outline-primary me-2">Login</a>
-                    <a href="./auth/sign-up.html" class="btn btn-primary">Sign-up</a>
+                    <a href="./auth/sign-in" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="./auth/sign-up" class="btn btn-primary">Sign-up</a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -53,63 +58,41 @@
 
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
-    
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <p class="card-text fs-5" style="font-weight: 500;">Title</p>
-                            <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Soluta temporibus quod labore tempore vitae est perferendis mollitia quam.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="leaveComment()">Add comment</button>
+                <?php 
+                foreach($postData as $post){
+                    echo '
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <p class="card-text fs-5" style="font-weight: 500;">'.$post['title'].'</p>
+                                    <p class="card-text">'.$post['message'].'</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="./comment.php?post='.$post['id'].'" class="btn btn-sm btn-outline-secondary">Add comment</a>
+                                        </div>
+                                        <small class="text-body-secondary">'.$post['date'].'</small>
+                                    </div>
                                 </div>
-                                <small class="text-body-secondary">9 mins</small>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    ';
+                }
+                ?>
                 
             </div>
         </div>
     </div>
-  
-
-    <div id="leave-comment" class="modal modal-sheet position-fixed bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
-         style="flex-direction: column; justify-content: center;">
-        <div class="modal-dialog w-50" role="document">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header p-5 pb-4 border-bottom-0">
-                    <h1 class="fw-bold mb-0 fs-2">Leave a comment</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeComment()"></button>
-                </div>
-    
-                <div class="modal-body p-5 pt-0">
-                    <form method="post">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control rounded-3" required>
-                            <label>Name</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control rounded-3" required>
-                            <label>Email address</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control rounded-3" required>
-                            <label>Message</label>
-                        </div>
-                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <div class="container">
         <footer class="py-3 my-4">
             <ul class="nav justify-content-center border-bottom pb-3 mb-3">
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Main</a></li>
+                <?php if(!empty($_COOKIE['email']) && !empty($_COOKIE['name'])): ?>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Dashboard</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">New post</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Profile</a></li>
+                <?php endif; ?>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
             </ul>
             <p class="text-center text-body-secondary">© 2023 Company, Inc</p>

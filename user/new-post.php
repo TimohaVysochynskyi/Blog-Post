@@ -1,3 +1,9 @@
+<?php
+if(empty($_COOKIE['email']) && empty($_COOKIE['name'])){
+    header("Location: ../");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,23 +25,23 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="./dashboard.html" class="nav-link link-body-emphasis" aria-current="page">
+                <a href="./dashboard" class="nav-link link-body-emphasis" aria-current="page">
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="./new-post.html" class="nav-link active">
+                <a href="./new-post" class="nav-link active">
                     New Post
                 </a>
             </li>
             <li>
-                <a href="./profile.html" class="nav-link link-body-emphasis">
+                <a href="./profile" class="nav-link link-body-emphasis">
                     Profile
                 </a>
             </li>
             <hr>
             <li>
-                <a href="#" class="nav-link link-body-emphasis">
+                <a href="../backend/sign-out.php" class="nav-link link-body-emphasis">
                     Log out
                 </a>
             </li>
@@ -44,7 +50,7 @@
     <main class="p-5 w-100">
         <form style="width: 100%;" method="post" action="../backend/new-post.php">
             <h1 class="h3 mb-3 fw-normal text-center">Create new post</h1>
-        
+
             <div class="form-floating mt-3">
                 <input type="text" class="form-control" name="title" required>
                 <label>Title</label>
